@@ -14,15 +14,13 @@ from tqdm import tqdm
 from pprint import pprint
 import argparse
 NUM_CLASSES = len(my_bidict)
+import csv 
 
 # Write your code here
 # And get the predicted label, which is a tensor of shape (batch_size,)
 # Begin of your code
 def get_label(model, model_input, device):
-    # Since the model's forward function expects a mode, we specify 'test' mode for classification
-    # We don't need to pass labels in test mode as per your model's implementation
     probabilities = model(model_input, mode = "classify")
-    # Use argmax to get the predicted class labels from the probabilities
     predicted_labels = probabilities.argmax(dim=1)
     return predicted_labels
 # End of your code
@@ -62,7 +60,7 @@ if __name__ == '__main__':
                                                             mode = args.mode, 
                                                             transform=ds_transforms), 
                                              batch_size=args.batch_size, 
-                                             shuffle=True, 
+                                             shuffle=True,
                                              **kwargs)
 
     #Write your code here
@@ -76,9 +74,7 @@ if __name__ == '__main__':
     #Attention: the path of the model is fixed to 'models/conditional_pixelcnn.pth'
     #You should save your model to this path
 
-    ####EXCEPTIONNALY MODIFED PLEASE CHANGE ###
-    model.load_state_dict(torch.load('/content/drive/MyDrive/CPEN455HW-2023W2/models/pcnn_cpen455_load_model_99.pth'))
-    #####
+    model.load_state_dict(torch.load('models/conditional_pixelcnn.pth'))
 
 
     model.eval()

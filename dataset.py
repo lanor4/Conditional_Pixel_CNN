@@ -19,6 +19,7 @@ my_bidict = bidict({'Class0': 0,
                     'Class3': 3})
 
 class CPEN455Dataset(Dataset):
+    #CHANGED
     def __init__(self, root_dir, mode='train', transform=None):
         """
         Args:
@@ -45,8 +46,7 @@ class CPEN455Dataset(Dataset):
         if category in my_bidict.values():
             category_name = my_bidict.inverse[category]
         else:
-            category_name = "Unknown"
-        # print(img_path)
+            category_name = -1
         image = read_image(img_path)  # Reads the image as a tensor
         image = image.type(torch.float32) / 255.  # Normalize to [0, 1]
         if image.shape[0] == 1:

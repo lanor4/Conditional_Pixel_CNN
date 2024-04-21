@@ -11,8 +11,7 @@ from dataset import *
 from tqdm import tqdm
 from pprint import pprint
 import argparse
-from pytorch_fid.fid_score import calculate_fid_given_paths
-### added for computing acc every saved step ###
+
 NUM_CLASSES = len(my_bidict)
 
 
@@ -48,7 +47,7 @@ def train_or_test(model, data_loader, optimizer, loss_op, device, args, epoch, m
         else : 
             class_strings = ['Class0', 'Class1', 'Class2', 'Class3']
 
-            # Convert each string to the corresponding integer
+            # Convert each string to the corresponding integer 
             for i in range (len(label)):
                 if label[i] == 'Class0':
                     label[i] = 0
@@ -239,8 +238,7 @@ if __name__ == '__main__':
     model = model.to(device)
 
     if args.load_params:
-        ### TO CHANGE, BECAUSE BUG ###
-        model.load_state_dict(torch.load('/content/drive/MyDrive/CPEN455HW-2023W2/models/pcnn_cpen455_load_model_9.pth'))
+        model.load_state_dict(torch.load(args.load_params))
         print('model parameters loaded')
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
@@ -277,9 +275,8 @@ if __name__ == '__main__':
                       mode = 'val')
         
         ###changed so we don't need to sample at the first epoch
-        if epoch % args.sampling_interval == 0 and epoch != 0:            
+        if epoch % args.sampling_interval == 0:            
             print('......sampling......')
-
 
             #### this allows us to plot the 4 different classes separatly in wandb 
             sample_t = sample(model, args.sample_batch_size, args.obs, sample_op)
@@ -340,19 +337,8 @@ if __name__ == '__main__':
             if args.en_wandb:
                 wandb.log({"FID": fid_score})
         
-        ###Weird saving dir 
         if (epoch + 1) % args.save_interval == 0:
 
-            
-
-            ####
-
-            # Construct the file path where you want to save the model
-            model_file_path = '/content/drive/MyDrive/CPEN455HW-2023W2/models/{}_{}.pth'.format(model_name, epoch)
-            
-            # Save the model's state_dict or the entire model
-            torch.save(model.state_dict(), model_file_path) 
-
-
-            # OR if you want to save the entire model (not just the state_dict)
-            # torch.save(model, model_file_path)
+            if not os.path.exists("models"):
+                os.makedirs("models")
+            torch.save(model.state_dict(), 'models/{}_{}.pth'.format(model_name, epoch))
