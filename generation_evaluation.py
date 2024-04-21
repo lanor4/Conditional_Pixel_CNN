@@ -61,8 +61,7 @@ if __name__ == "__main__":
     model = PixelCNN(nr_resnet=5, nr_filters=160, nr_logistic_mix=10, input_channels=3, num_classes=4, label_embedding_dim=32)
 
     model = model.to(device)
-    model.load_state_dict(torch.load('final_check.pth'))
-    ta_les_crampte(model=model, gen_data_dir=gen_data_dir)
+    model.load_state_dict(torch.load('models/conditional_pixelcnn.pth'))    ta_les_crampte(model=model, gen_data_dir=gen_data_dir)
     #End of your code
     paths = [gen_data_dir, ref_data_dir]
     print("#generated images: {:d}, #reference images: {:d}".format(
